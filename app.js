@@ -36,6 +36,11 @@ function changeColor(event) {
     ctx.strokeStyle = color;
 }
 
+function handleRangeChange(event) {
+    const range = event.target.value;
+    ctx.lineWidth = range;
+}
+
 if (canvas) {
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mousedown", handleMouseDown);
@@ -44,3 +49,7 @@ if (canvas) {
 }
 
 Array.from(color).forEach(color => color.addEventListener("click", changeColor));
+
+if (range) {
+    range.addEventListener("input", handleRangeChange);
+}
