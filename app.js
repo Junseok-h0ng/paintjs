@@ -50,12 +50,16 @@ function handleModeChange() {
     if (!fill) {
         fill = true;
         mode.innerText = "Paint";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
     } else {
         fill = false;
         mode.innerText = "Fill";
     }
+}
 
+function handleModeClick() {
+    if (fill) {
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 }
 
 if (canvas) {
@@ -63,6 +67,7 @@ if (canvas) {
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", stopEvent);
     canvas.addEventListener("mouseleave", stopEvent);
+    canvas.addEventListener("click", handleModeClick);
 }
 
 Array.from(color).forEach(color => color.addEventListener("click", changeColor));
@@ -72,6 +77,5 @@ if (range) {
 }
 
 if (mode) {
-    console.log("click");
     mode.addEventListener("click", handleModeChange);
 }
