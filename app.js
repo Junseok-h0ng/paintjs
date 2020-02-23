@@ -4,6 +4,7 @@ const range = document.getElementById("jsRange");
 const color = document.getElementsByClassName("jsColor");
 const mode = document.getElementById("jsMode");
 const save = document.getElementById("jsSave");
+const stick = document.getElementById("jsStick");
 
 
 canvas.width = 700;
@@ -15,24 +16,45 @@ ctx.lineWidth = 2.5;
 
 let painting = false;
 let fill = false;
+let stickLine = false;
+let lineTo = false;
 
 function handleMouseMove(event) {
     const x = event.offsetX;
     const y = event.offsetY;
-    if (!painting) {
+    if (!painting && !stickLine) {
         ctx.beginPath();
         ctx.moveTo(x, y);
-    } else {
+    } else if (painting && !stickLine) {
         ctx.lineTo(x, y);
         ctx.stroke();
     }
+}
+
+function handleMouseClick(event) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    if (!lineTo) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        lineTo = true;
+    } else {
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        lineTo = false;
+    }
+
+}
+
+function DrawingStick(event) {
+
 }
 
 function handleMouseDown() {
     painting = true;
 }
 
-function stopEvent() {
+function stopEvent(event) {
     painting = false;
 }
 
@@ -57,9 +79,11 @@ function handleModeChange() {
     }
 }
 
-function handleModeClick() {
+function handleModeClick(event) {
     if (fill) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else if (stickLine) {
+        handleMouseClick(event);
     }
 }
 
@@ -76,6 +100,16 @@ function handleClickContextMenu(event) {
     event.preventDefault();
 }
 
+function handleStick() {
+    if (!stickLine) {
+        stickLine = true;
+        stick.innerText = "Stroke";
+    } else {
+        stickLine = false;
+        stick.innerText = "Stick";
+    }
+}
+
 if (canvas) {
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mousedown", handleMouseDown);
@@ -84,6 +118,7 @@ if (canvas) {
     canvas.addEventListener("click", handleModeClick);
     canvas.addEventListener("contextmenu", handleClickContextMenu);
 }
+
 
 Array.from(color).forEach(color => color.addEventListener("click", changeColor));
 
@@ -97,4 +132,8 @@ if (mode) {
 
 if (save) {
     save.addEventListener("click", handleSaveClick);
+}
+
+if (stick) {
+    stick.addEventListener("click", handleStick);
 }
