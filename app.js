@@ -18,16 +18,22 @@ let painting = false;
 let fill = false;
 let stickLine = false;
 let lineTo = false;
+let eraser = false;
 
 function handleMouseMove(event) {
     const x = event.offsetX;
     const y = event.offsetY;
-    if (!painting && !stickLine) {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    } else if (painting && !stickLine) {
-        ctx.lineTo(x, y);
-        ctx.stroke();
+    if (!stickLine) {
+        if (!painting) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            if (eraser) {
+                ctx.clearRect(x, y, 10, 10);
+            }
+        } else if (!eraser) {
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
     }
 }
 
@@ -43,10 +49,6 @@ function handleMouseClick(event) {
         ctx.stroke();
         lineTo = false;
     }
-
-}
-
-function DrawingStick(event) {
 
 }
 
@@ -67,15 +69,22 @@ function changeColor(event) {
 function handleRangeChange(event) {
     const range = event.target.value;
     ctx.lineWidth = range;
+
 }
 
 function handleModeChange() {
-    if (!fill) {
-        fill = true;
-        mode.innerText = "Paint";
+    if (!eraser) {
+        if (!fill) {
+            fill = true;
+            mode.innerText = "Fill"; //fillMode
+        } else {
+            fill = false;
+            eraser = true;
+            mode.innerText = "Eraser"; //paintMode
+        }
     } else {
-        fill = false;
-        mode.innerText = "Fill";
+        eraser = false;
+        mode.innerText = "Paint"; //eraserMode
     }
 }
 
@@ -103,10 +112,10 @@ function handleClickContextMenu(event) {
 function handleStick() {
     if (!stickLine) {
         stickLine = true;
-        stick.innerText = "Stroke";
+        stick.innerText = "Stick";
     } else {
         stickLine = false;
-        stick.innerText = "Stick";
+        stick.innerText = "Stroke";
     }
 }
 
